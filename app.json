@@ -1,0 +1,33 @@
+{
+  "expo": {
+    "name": "Wallpaper-Application",
+    "slug": "Wallpaper-Application",
+    "version": "1.0.0",
+    "scheme": "Wallpaper-Application",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "newArchEnabled": true,
+    "splash": {
+      "image": "./assets/splash-icon.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "package": "com.anonymous.WallpaperApplication",
+    "platforms": [
+      "ios",
+      "android",
+      "web"
+    ],
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "plugins": [
+      "expo-asset",
+      "expo-router"
+    ],
+    "android": {
+      "package": "com.anonymous.WallpaperApplication"
+    }
+  }
+}
