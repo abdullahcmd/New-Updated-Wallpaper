@@ -11,61 +11,63 @@ import {
   Dimensions,
 } from "react-native";
 import { data } from "../../utils/categoriesDta/Data";
+import { categories } from "../../utils/categoriesDta/Data";
 const {height, width} = Dimensions.get('window');
-const Categories = () => {
-  const { activeCategory, setActiveCategory } = useState(null);
-
-  const handleChangeCAtegory = (cat) => {
-    setActiveCategory(cat);
-  };
-
-
+const Categories = ( {handleChange,isActive}) => {
   return (
     <FlatList
       horizontal={true}
       contentContainerStyle={styles.flatListContainer}
       showsHorizontalScrollIndicator={false}
-      data={data.categories}
+      data={categories}
       nestedScrollEnabled={true}
       keyExtractor={(item) => item}
-      renderItem={({ item, index }) => <List title={item} />}
+      renderItem={({ item, index }) => 
+      <List
+      isActive={isActive==item}
+      handleChangeCategory={handleChange}
+      title={item} />}
     />
   );
 };
 
-const List = ({ title }) => {
+const List = ({ title,isActive,handleChangeCategory }) => {
   return (
-      <TouchableOpacity style={styles.singleCategory}>
-        <Text style={styles.textStyle}>{title}</Text>
+      <TouchableOpacity onPress={()=>handleChangeCategory(title)} style={[
+        styles.singleCategory,
+        isActive && { backgroundColor:'#595959' }, // Highlight active category
+      ]}>
+        <Text  style={[
+          styles.textStyle,
+          isActive && {color: "white" },
+        ]}>{title}</Text>
       </TouchableOpacity>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    //flex: 1,
+ 
     justifyContent: "center",
     backgroundColor:'black',
-    alignItems: "center",
+    alignItems: "center"
   },
   textStyle: {
     fontSize: 17,
-    padding: 5,
+    padding:width*0.01,
+    textAlign:'center',
   },
   flatListContainer: {
-     //backgroundColor:'black',
-    paddingVertical: 10,
-   // height : '20%' ,
-   //flex : 1,
+    paddingLeft:width*0.04,
+    paddingRight:width*0.04,
     gap: 10,
-    paddingLeft: 10,
-    paddingRight: 10,
   },
   singleCategory: {
     borderWidth: 3,
-    borderRadius: 20,
+    backgroundColor:'white',
+    borderRadius: 15,
+  padding:width*0.01,
     borderColor: "#595959",
-    padding: 5,
   },
 });
 
