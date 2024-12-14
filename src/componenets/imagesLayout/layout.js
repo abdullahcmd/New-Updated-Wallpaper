@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { Modal, StyleSheet, View, Text, TouchableOpacity, Image } from "react-native";
+import { Modal, StyleSheet, View, Text, TouchableOpacity, Image, Alert } from "react-native";
 import MasonryList from "react-native-masonry-list";
 import { apiCall } from "../../contants/API/imagesApi";
+import * as FileSystem from "expo-file-system";
+import * as MediaLibrary from "expo-media-library";
+
 
 const LayoutImage = ({ activeCategory }) => {
   const [images, setImages] = useState([]);
@@ -51,6 +54,34 @@ const LayoutImage = ({ activeCategory }) => {
     setSelectedImage(null);
   };
 
+  // Download image using FileSystem API
+  const downloadImage = async () => {
+    if (!selectedImage) {
+      Alert.alert("Error", "No image selected");
+      return;
+    }
+
+    try {
+      // Get the path to save the image locally
+      const fileUri = FileSystem.documentDirectory + "downloaded_image.jpg";
+      
+      // Download the image and save it to the file system
+      const response = await FileSystem.downloadAsync(selectedImage, fileUri);
+
+      // Optionally, save to the gallery if you want
+      const asset = await MediaLibrary.createAssetAsync(response.uri);
+       await MediaLibrary.createAlbumAsync("Download", asset, false); // Save image to gallery
+
+      Alert.alert("Success", "Image downloaded successfully!");
+
+      // You can also show the file's URI to let the user know where it's saved
+      console.log("Downloaded file saved at:", response.uri);
+    } catch (error) {
+      console.error("Error downloading image:", error);
+      Alert.alert("Error", "Failed to download image.");
+    }
+  };
+
   return (
     <View style={styles.container}>
       {loading && <Text>Loading...</Text>} {/* Loading text */}
@@ -83,7 +114,7 @@ const LayoutImage = ({ activeCategory }) => {
               <TouchableOpacity onPress={closeModal} style={styles.button}>
                 <Text style={styles.buttonText}>Close</Text>
               </TouchableOpacity>
-              <TouchableOpacity style={styles.button}>
+              <TouchableOpacity onPress={downloadImage} style={styles.button}>
                 <Text style={styles.buttonText}>Download</Text>
               </TouchableOpacity>
             </View>
@@ -147,5 +178,4 @@ const styles = StyleSheet.create({
 });
 
 export default LayoutImage;
-
 
